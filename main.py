@@ -54,7 +54,7 @@ def main():
                 distance = asteroid.position.distance_to(shot.position)
                 total_radius = asteroid.radius + shot.radius
                 if distance <= total_radius:
-                    asteroid.kill()
+                    asteroid.split()
                     shot.kill()
 
         for element in drawable:
