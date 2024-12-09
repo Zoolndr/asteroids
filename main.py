@@ -35,8 +35,7 @@ def main():
 
     while running:
         dt = clock.tick(FPS) / 1000
-        if len(asteroids) > 0:  # only print when we have asteroids
-            print(f"Current asteroid count: {len(asteroids)}")
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
