@@ -5,6 +5,7 @@ from constants import *
 from player import Player
 from asteroid import Asteroid
 from asteroidfield import AsteroidField
+from powerups import Powerups
 from shot import Shot
 import sys
 ###########################
@@ -13,8 +14,6 @@ screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('Asteroids by Zoolndr')
 running = True
 FPS = 60
-
-
 
 
 updatable = pygame.sprite.Group()
@@ -27,6 +26,8 @@ Asteroid.containers = (asteroids, updatable, drawable)
 AsteroidField.containers = (updatable,)
 
 
+
+
 def main():
     pygame.init()
 
@@ -36,11 +37,13 @@ def main():
 
     clock = pygame.time.Clock()
     player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)
+    powerups = Powerups()
     field = AsteroidField()
 
     font = pygame.font.SysFont(None, 36)
     elapsed_frames = 0
     score_counter = [0]
+    powerup_timer = 0
   
     
 
@@ -48,18 +51,26 @@ def main():
         dt = clock.tick(FPS) / 1000
         
         elapsed_frames += 1
+        powerup_timer += 1
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
             
         screen.fill('Black')
+        if powerup_timer >= POWERUP_INTERNAL_COOLDOWN:
+            powerup_timer = 0
+            powerups.powerup_manager()
 
         for element in updatable:
             element.update(dt)
+
         for asteroid in asteroids:
             if player.check_collision(asteroid):
                 print('Game over')
                 sys.exit()
+        powerups.render(screen)
+   
+
         for asteroid in asteroids:
             for shot in shots:
                 distance = asteroid.position.distance_to(shot.position)
@@ -71,6 +82,8 @@ def main():
 
         for element in drawable:
             element.draw(screen)
+        
+
         
         
         timer = elapsed_frames // 60

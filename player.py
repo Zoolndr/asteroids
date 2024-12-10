@@ -13,6 +13,8 @@ class Player(CircleShape):
             group.add(self)
     
 
+
+
     def triangle(self):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         right = pygame.Vector2(0, 1).rotate(self.rotation + 90) * self.radius / 1.5
@@ -30,6 +32,16 @@ class Player(CircleShape):
     def move(self, dt):
         forward = pygame.Vector2(0, 1).rotate(self.rotation)
         self.position += forward * PLAYER_SPEED * dt
+        
+        if self.position.x < 0:
+            self.position.x = SCREEN_WIDTH
+        if self.position.x > SCREEN_WIDTH:
+            self.position.x = 0
+        if self.position.y < 0:
+            self.position.y = SCREEN_HEIGHT
+        if self.position.y > SCREEN_HEIGHT:
+            self.position.y = 0
+        
  
     def shoot(self):
         if self.shoot_cooldown <= 0:
@@ -38,6 +50,7 @@ class Player(CircleShape):
             new_shot = Shot(tip_position.x, tip_position.y)
             new_shot.velocity = direction * PLAYER_SHOOT_SPEED
             self.shoot_cooldown = PLAYER_SHOOT_COOLDOWN
+
 
 
     def update(self, dt):
